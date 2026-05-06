@@ -1,0 +1,84 @@
+# ==========================================
+# 🛑 DEVSECOPS SECURE .GITIGNORE (CORRECTED)
+# ==========================================
+
+# ------------------------------------------
+# 🔐 SECRETS & CREDENTIALS (CRITICAL)
+# ------------------------------------------
+.env
+.env.*
+*.key
+*.pem
+*.crt
+*.jks
+*.p12
+*.keystore
+*secret*.yaml
+*secret*.yml
+secrets.yaml
+credentials.json
+auth.json
+
+# ------------------------------------------
+# ⚙️ CONFIGURATION (SAFE STRATEGY)
+# ------------------------------------------
+# Keep default config
+!application.properties
+!application.yml
+
+# Ignore ONLY sensitive environments
+application-prod.properties
+application-prod.yml
+application-dev.properties
+application-dev.yml
+application-local.properties
+application-local.yml
+
+# ------------------------------------------
+# ☕ SPRING BOOT / MAVEN
+# ------------------------------------------
+target/
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# ------------------------------------------
+# 🅰️ ANGULAR / NODE
+# ------------------------------------------
+node_modules/
+dist/
+.angular/
+coverage/
+.npm/
+npm-debug.log*
+yarn-error.log*
+
+# ------------------------------------------
+# 🐳 DOCKER & K8s
+# ------------------------------------------
+docker-volumes/
+volumes/
+db-data/
+mysql-data/
+rabbitmq-data/
+*.tar
+
+# ------------------------------------------
+# 💻 IDE
+# ------------------------------------------
+.idea/
+*.iml
+.vscode/
+
+# ------------------------------------------
+# 🛠️ SYSTEM
+# ------------------------------------------
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.bak
