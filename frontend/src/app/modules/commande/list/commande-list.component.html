@@ -1,0 +1,55 @@
+<div class="toolbar">
+  <input type="text" placeholder="Rechercher une commande..." [(ngModel)]="searchTerm" (input)="filterCommandes()" />
+  <button class="btn btn-success add-btn" (click)="goToAdd()"><i class="fas fa-plus"></i> Nouvelle commande</button>
+  <button class="btn btn-info refresh-btn" (click)="refresh()"><i class="fas fa-sync-alt"></i> Rafraîchir</button>
+</div>
+
+<table>
+  <thead>
+  <tr>
+    <th>Référence</th>
+    <th>Date</th>
+    <th>Fournisseur</th>
+    <th>Produits</th>
+    <th>Quantité totale</th>
+    <th>Statut</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <tr *ngFor="let c of filteredCommandes">
+    <td><strong>{{ c.reference || 'N/A' }}</strong></td>
+    <td>{{ c.dateCommande ? (c.dateCommande | date:'dd/MM/yyyy') : 'N/A' }}</td>
+    <td>{{ getFournisseurNomFromCommande(c) }}</td>
+    <td>{{ getTotalItems(c) }} produit(s)</td>
+    <td>{{ getTotalQuantite(c) }} unité(s)</td>
+    <td>
+      <span class="badge" [ngClass]="getStatusClass(c.status)">
+        {{ getStatusLabel(c.status) }}
+      </span>
+    </td>
+    <td class="actions">
+      <button class="btn btn-info detail-btn" (click)="showDetails(c.id!)"><i class="fas fa-eye"></i> Détails</button>
+      <button class="btn btn-danger delete-btn" (click)="openDeleteModal(c)"><i class="fas fa-trash"></i> Supprimer</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<p *ngIf="filteredCommandes.length === 0" class="empty">
+  {{ searchTerm ? 'Aucune commande trouvée.' : 'Aucune commande enregistrée.' }}
+</p>
+
+<!-- Modal de confirmation -->
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal-box">
+    <h3>Confirmation de suppression</h3>
+    <p>Voulez-vous vraiment supprimer la commande <strong>{{ commandeToDelete?.reference || '#' + commandeToDelete?.id }}</strong> ?</p>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary cancel" (click)="cancelDelete()"><i class="fas fa-times"></i> Annuler</button>
+      <button class="btn btn-danger confirm" (click)="confirmDelete()"><i class="fas fa-trash"></i> Supprimer</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+<div class="form-page">
+  <div class="header-actions">
+    <button class="btn btn-back" (click)="router.navigate(['/stocks'])">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <h2>Ajouter un stock</h2>
+  </div>
+
+<form #stockForm="ngForm" (ngSubmit)="save(stockForm)">
+
+  <label for="produitId">Produit <span class="required">*</span></label>
+  <select id="produitId" [(ngModel)]="stock.produitId" name="produitId" required [class.error]="formErrors.produitId">
+    <option value="">-- Choisir un produit --</option>
+    <option *ngFor="let p of produits" [value]="p.id">{{ p.designation }} ({{ p.reference }})</option>
+  </select>
+  <span class="error-message" *ngIf="formErrors.produitId">{{ formErrors.produitId }}</span>
+
+  <label for="quantite">Quantité <span class="required">*</span></label>
+  <input id="quantite" type="number" [(ngModel)]="stock.quantite" name="quantite" required min="0" step="1" placeholder="Ex: 100" [class.error]="formErrors.quantite">
+  <span class="error-message" *ngIf="formErrors.quantite">{{ formErrors.quantite }}</span>
+
+  <label for="seuilCritique">Seuil Critique <span class="required">*</span></label>
+  <input id="seuilCritique" type="number" [(ngModel)]="stock.seuilCritique" name="seuilCritique" required min="0" step="1" placeholder="Ex: 20" [class.error]="formErrors.seuilCritique">
+  <span class="error-message" *ngIf="formErrors.seuilCritique">{{ formErrors.seuilCritique }}</span>
+
+  <label for="emplacement">Emplacement</label>
+  <input id="emplacement" type="text" [(ngModel)]="stock.emplacement" name="emplacement" placeholder="Ex: Entrepôt A, Rayon 3" maxlength="100">
+
+  <button type="submit" [disabled]="stockForm.invalid"><i class="fas fa-save"></i> Enregistrer</button>
+</form>
+</div>
+

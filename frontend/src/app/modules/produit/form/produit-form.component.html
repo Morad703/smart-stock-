@@ -1,0 +1,74 @@
+<div class="form-page">
+  <div class="header-actions">
+    <button class="btn btn-back" (click)="router.navigate(['/produits'])">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <h2>Ajouter un produit</h2>
+  </div>
+
+<form #produitForm="ngForm" (ngSubmit)="save(produitForm)">
+
+  <label for="designation">Désignation <span class="required">*</span></label>
+  <input id="designation" type="text" [(ngModel)]="produit.designation" name="designation" required placeholder="Ex: Ordinateur portable" [class.error]="formErrors.designation" maxlength="200">
+  <span class="error-message" *ngIf="formErrors.designation">{{ formErrors.designation }}</span>
+
+  <label for="description">Description</label>
+  <input id="description" type="text" [(ngModel)]="produit.description" name="description" placeholder="Description du produit" maxlength="500">
+
+  <label for="prix">Prix <span class="required">*</span></label>
+  <input id="prix" type="number" [(ngModel)]="produit.prix" name="prix" required min="0" step="0.01" placeholder="Ex: 999.99" [class.error]="formErrors.prix">
+  <span class="error-message" *ngIf="formErrors.prix">{{ formErrors.prix }}</span>
+
+  <label for="categorie">Catégorie</label>
+  <select id="categorie" [(ngModel)]="produit.categorie" name="categorie">
+    <option value="">-- Choisir une catégorie --</option>
+    <option value="Aliments">Aliments</option>
+    <option value="Cosmétiques">Cosmétiques</option>
+    <option value="Ménage">Ménage</option>
+    <option value="Bébé">Bébé</option>
+    <option value="Accessoires">Accessoires</option>
+  </select>
+
+  <label for="reference">Référence</label>
+  <input id="reference" type="text" [(ngModel)]="produit.reference" name="reference" required disabled placeholder="Générée automatiquement">
+
+  <label for="fournisseur_id">Fournisseur <span class="required">*</span></label>
+  <select id="fournisseur_id" [(ngModel)]="produit.fournisseur_id" name="fournisseur_id" required [class.error]="formErrors.fournisseur_id">
+    <option value="">-- Choisir un fournisseur --</option>
+    <option *ngFor="let f of fournisseurs" [value]="f.id">{{ f.nom }}</option>
+  </select>
+  <span class="error-message" *ngIf="formErrors.fournisseur_id">{{ formErrors.fournisseur_id }}</span>
+
+  <button type="button" class="btn btn-info add-fournisseur-btn" (click)="openFournisseurModal()">
+    <i class="fas fa-plus"></i> Ajouter un fournisseur
+  </button>
+
+  <button type="submit" [disabled]="produitForm.invalid"><i class="fas fa-save"></i> Enregistrer</button>
+</form>
+</div>
+
+<!-- MODAL AJOUT FOURNISSEUR -->
+<div class="modal-overlay" *ngIf="showFournisseurModal">
+  <div class="modal-box">
+    <h3>Ajouter un fournisseur</h3>
+
+    <div class="modal-content">
+      <label for="modal-nom">Nom</label>
+      <input id="modal-nom" type="text" [(ngModel)]="newFournisseur.nom" placeholder="Ex: ABC Company">
+
+      <label for="modal-email">Email</label>
+      <input id="modal-email" type="email" [(ngModel)]="newFournisseur.email" placeholder="Ex: contact@abc.com">
+
+      <label for="modal-telephone">Téléphone</label>
+      <input id="modal-telephone" type="text" [(ngModel)]="newFournisseur.telephone" placeholder="Ex: +33 1 23 45 67 89">
+
+      <label for="modal-adresse">Adresse</label>
+      <input id="modal-adresse" type="text" [(ngModel)]="newFournisseur.adresse" placeholder="Ex: 123 Rue Example">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary cancel" (click)="closeFournisseurModal()"><i class="fas fa-times"></i> Annuler</button>
+      <button class="btn btn-success confirm" (click)="saveFournisseur()"><i class="fas fa-save"></i> Enregistrer</button>
+    </div>
+  </div>
+</div>

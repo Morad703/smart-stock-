@@ -1,0 +1,62 @@
+<div class="toolbar">
+  <input type="text" placeholder="Rechercher un stock..." [(ngModel)]="searchTerm" (input)="filterStocks()" />
+  <button class="btn btn-success add-btn" (click)="goToAdd()"><i class="fas fa-plus"></i> Ajouter</button>
+  <button class="btn btn-warning sortie-btn" (click)="goToSortie()"><i class="fas fa-arrow-up"></i> Sortie</button>
+  <button class="btn btn-info refresh-btn" (click)="refresh()"><i class="fas fa-sync-alt"></i> Rafraîchir</button>
+</div>
+
+<table>
+  <thead>
+  <tr>
+    <th>Référence</th>
+    <th>Produit</th>
+    <th>Quantité</th>
+    <th>Seuil Critique</th>
+    <th>Emplacement</th>
+    <th>Statut</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <tr *ngFor="let s of filteredStocks" [class.critical]="s.quantite <= s.seuilCritique">
+    <td><strong>{{ getProduitReference(s.produitId) }}</strong></td>
+    <td>{{ getProduitNom(s.produitId) }}</td>
+    <td class="quantity-cell">
+      <span class="quantity-value">{{ s.quantite }}</span>
+      <span *ngIf="getStockChange(s.id)" 
+            class="quantity-change" 
+            [class.increase]="getStockChange(s.id)?.type === 'increase'"
+            [class.decrease]="getStockChange(s.id)?.type === 'decrease'">
+        <i class="fas" [class.fa-arrow-up]="getStockChange(s.id)?.type === 'increase'"
+                      [class.fa-arrow-down]="getStockChange(s.id)?.type === 'decrease'"></i>
+        {{ getStockChange(s.id)?.value }}
+      </span>
+    </td>
+    <td>{{ s.seuilCritique }}</td>
+    <td>{{ s.emplacement || 'N/A' }}</td>
+    <td>
+      <span *ngIf="s.quantite <= s.seuilCritique" class="badge critical">Critique</span>
+      <span *ngIf="s.quantite > s.seuilCritique" class="badge ok">OK</span>
+    </td>
+    <td class="actions">
+      <button class="btn btn-info detail-btn" (click)="showDetails(s.id)"><i class="fas fa-eye"></i> Détails</button>
+      <button class="btn btn-danger delete-btn" (click)="openDeleteModal(s)"><i class="fas fa-trash"></i> Supprimer</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<!-- 🌟 MODAL DE CONFIRMATION -->
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal-box">
+    <h3>Confirmation de suppression</h3>
+    <p>Voulez-vous vraiment supprimer le stock pour <strong>{{ stockToDelete ? getProduitNom(stockToDelete.produitId) : '' }}</strong> ?</p>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary cancel" (click)="cancelDelete()"><i class="fas fa-times"></i> Annuler</button>
+      <button class="btn btn-danger confirm" (click)="confirmDelete()"><i class="fas fa-trash"></i> Supprimer</button>
+    </div>
+  </div>
+</div>
+

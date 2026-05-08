@@ -1,0 +1,50 @@
+<nav class="navbar" [class.navbar-home]="isHomePage" *ngIf="isAuthenticated && !isPublicRoute">
+  <ng-container *ngIf="!isHomePage">
+    <a routerLink="/home" class="logo">Smart Stock</a>
+    <ul class="nav-links">
+      <li><a routerLink="/fournisseurs" routerLinkActive="active"><i class="fas fa-truck"></i> Fournisseurs</a></li>
+      <li><a routerLink="/produits" routerLinkActive="active"><i class="fas fa-box"></i> Produits</a></li>
+      <li><a routerLink="/commandes" routerLinkActive="active"><i class="fas fa-shopping-cart"></i> Commandes</a></li>
+      <li><a routerLink="/stocks" routerLinkActive="active"><i class="fas fa-warehouse"></i> Stock</a></li>
+      <li>
+        <a routerLink="/notifications" routerLinkActive="active" class="notification-link">
+          <i class="fas fa-bell"></i> Notifications
+          <span class="notification-badge" *ngIf="hasNewNotifications$ | async">•</span>
+        </a>
+      </li>
+      <li>
+        <button class="btn-logout" (click)="logout()" title="Déconnexion">
+          <i class="fas fa-sign-out-alt"></i> Déconnexion
+        </button>
+      </li>
+    </ul>
+  </ng-container>
+  <ng-container *ngIf="isHomePage">
+    <div class="logo-centered">Smart Stock</div>
+    <ul class="nav-links">
+      <li>
+        <a routerLink="/notifications" routerLinkActive="active" class="notification-link">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge" *ngIf="hasNewNotifications$ | async">•</span>
+        </a>
+      </li>
+      <li>
+        <button class="btn-logout" (click)="logout()" title="Déconnexion">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </li>
+    </ul>
+  </ng-container>
+</nav>
+<app-toast></app-toast>
+<app-alert></app-alert>
+<app-confirm-dialog
+  [show]="showLogoutDialog"
+  title="Déconnexion"
+  message="Êtes-vous sûr de vouloir vous déconnecter ?"
+  confirmText="Déconnexion"
+  cancelText="Annuler"
+  (confirmed)="onLogoutConfirmed($event)">
+</app-confirm-dialog>
+<router-outlet></router-outlet>
+

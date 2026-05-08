@@ -1,0 +1,171 @@
+<div class="home-container">
+  <div class="welcome-section">
+    <h1>Bienvenue dans votre système de gestion de stock</h1>
+    <p class="subtitle">Gérez vos fournisseurs, produits, commandes et stocks en toute simplicité</p>
+  </div>
+
+  <!-- Statistiques principales -->
+  <div class="stats-section" *ngIf="!isLoading">
+    <h2 class="section-title">
+      <i class="fas fa-chart-line"></i>
+      Statistiques générales
+    </h2>
+    <div class="stats-grid">
+      <div class="stat-card stat-primary" routerLink="/fournisseurs">
+        <div class="stat-icon">
+          <i class="fas fa-truck"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ stats.fournisseurs }}</h3>
+          <p>Fournisseurs</p>
+        </div>
+        <div class="stat-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+
+      <div class="stat-card stat-success" routerLink="/produits">
+        <div class="stat-icon">
+          <i class="fas fa-box"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ stats.produits }}</h3>
+          <p>Produits</p>
+        </div>
+        <div class="stat-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+
+      <div class="stat-card stat-info" routerLink="/commandes">
+        <div class="stat-icon">
+          <i class="fas fa-shopping-cart"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ stats.commandes }}</h3>
+          <p>Commandes</p>
+        </div>
+        <div class="stat-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+
+      <div class="stat-card stat-warning" routerLink="/stocks">
+        <div class="stat-icon">
+          <i class="fas fa-warehouse"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ stats.stocks }}</h3>
+          <p>Stocks</p>
+        </div>
+        <div class="stat-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analyses et alertes -->
+  <div class="analyses-section" *ngIf="!isLoading">
+    <div class="analyses-grid">
+      <!-- Alertes de stock -->
+      <div class="analysis-card alert-card">
+        <div class="analysis-header">
+          <h3>
+            <i class="fas fa-exclamation-triangle"></i>
+            Alertes de stock
+          </h3>
+        </div>
+        <div class="analysis-content">
+          <div class="alert-item alert-critical" *ngIf="analyses.stockCritique > 0">
+            <div class="alert-icon">
+              <i class="fas fa-times-circle"></i>
+            </div>
+            <div class="alert-info">
+              <strong>{{ analyses.stockCritique }}</strong>
+              <span>Stock épuisé</span>
+            </div>
+          </div>
+          <div class="alert-item alert-warning" *ngIf="analyses.stockBas > 0">
+            <div class="alert-icon">
+              <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <div class="alert-info">
+              <strong>{{ analyses.stockBas }}</strong>
+              <span>Stock bas</span>
+            </div>
+          </div>
+          <div class="alert-item alert-success" *ngIf="analyses.stockCritique === 0 && analyses.stockBas === 0">
+            <div class="alert-icon">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="alert-info">
+              <strong>Tous les stocks sont suffisants</strong>
+            </div>
+          </div>
+        </div>
+        <div class="analysis-footer" routerLink="/stocks">
+          <span>Voir les détails</span>
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+
+      <!-- Statistiques de stock -->
+      <div class="analysis-card info-card">
+        <div class="analysis-header">
+          <h3>
+            <i class="fas fa-chart-bar"></i>
+            Vue d'ensemble des stocks
+          </h3>
+        </div>
+        <div class="analysis-content">
+          <div class="info-item">
+            <div class="info-label">Stock total</div>
+            <div class="info-value">{{ analyses.stockTotal }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Commandes en attente</div>
+            <div class="info-value">{{ analyses.commandesEnAttente }}</div>
+          </div>
+        </div>
+        <div class="analysis-footer" routerLink="/commandes">
+          <span>Voir les commandes</span>
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+
+      <!-- Produits par catégorie -->
+      <div class="analysis-card category-card" *ngIf="getCategoriesArray().length > 0">
+        <div class="analysis-header">
+          <h3>
+            <i class="fas fa-tags"></i>
+            Produits par catégorie
+          </h3>
+        </div>
+        <div class="analysis-content">
+          <div class="category-item" *ngFor="let cat of getCategoriesArray()">
+            <div class="category-name">{{ cat.name }}</div>
+            <div class="category-bar">
+              <div class="category-fill" [style.width.%]="(cat.count / stats.produits) * 100"></div>
+            </div>
+            <div class="category-count">{{ cat.count }}</div>
+          </div>
+        </div>
+        <div class="analysis-footer" routerLink="/produits">
+          <span>Voir tous les produits</span>
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+    </div>
+    <p>Chargement des statistiques...</p>
+  </div>
+</div>
+
+

@@ -1,0 +1,133 @@
+<div class="form-page">
+  <div class="header-actions">
+    <button class="btn btn-back" (click)="goToStocks()">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <h2>Sortie de Stock</h2>
+  </div>
+
+  <form (ngSubmit)="validerSortie()">
+    <label for="stockId">Produit en stock <span class="required">*</span></label>
+    <select
+      id="stockId"
+      [(ngModel)]="sortie.stockId"
+      name="stockId"
+      required
+      (change)="onStockChange()"
+      [disabled]="stocks.length === 0"
+      [class.error]="formErrors.stockId">
+      <option value="">-- Sélectionner un produit --</option>
+      <option *ngFor="let s of stocks" [value]="s.id">
+        {{ getProduitNom(s.produitId) }} - Stock: {{ s.quantite }}
+      </option>
+      <option *ngIf="stocks.length === 0" disabled>Chargement des stocks...</option>
+    </select>
+    <small *ngIf="stocks.length === 0" style="color: var(--text-secondary); margin-top: var(--spacing-xs); display: block;">
+      Veuillez patienter, chargement en cours...
+    </small>
+    <span class="error-message" *ngIf="formErrors.stockId">{{ formErrors.stockId }}</span>
+
+    <div class="info-box" *ngIf="stockSelectionne">
+      <h3>Informations du stock sélectionné</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Produit:</label>
+          <span *ngIf="produits.length > 0 && stockSelectionne.produitId">
+            {{ getProduitNom(stockSelectionne.produitId) }}
+          </span>
+          <span *ngIf="produits.length === 0" class="loading">Chargement des produits...</span>
+          <span *ngIf="produits.length > 0 && !stockSelectionne.produitId" class="error">
+            Produit ID manquant
+          </span>
+        </div>
+        <div class="info-item">
+          <label>Quantité disponible:</label>
+          <span class="quantite-disponible">{{ quantiteDisponible }}</span>
+        </div>
+        <div class="info-item">
+          <label>Seuil critique:</label>
+          <span [class.critical]="stockSelectionne.quantite <= stockSelectionne.seuilCritique">
+            {{ stockSelectionne.seuilCritique }}
+          </span>
+        </div>
+        <div class="info-item" *ngIf="stockSelectionne.emplacement">
+          <label>Emplacement:</label>
+          <span>{{ stockSelectionne.emplacement }}</span>
+        </div>
+      </div>
+    </div>
+
+
+
+    <label for="quantite">Quantité à sortir <span class="required">*</span></label>
+    <input
+      id="quantite"
+      type="number"
+      [(ngModel)]="sortie.quantite"
+      name="quantite"
+      required
+      min="1"
+      [max]="quantiteDisponible"
+      placeholder="Entrez la quantité"
+      [class.error]="formErrors.quantite">
+    <small *ngIf="quantiteDisponible > 0 && !formErrors.quantite" style="color: var(--text-secondary); margin-top: var(--spacing-xs); display: block;">
+      Maximum disponible: {{ quantiteDisponible }}
+    </small>
+    <span class="error-message" *ngIf="formErrors.quantite">{{ formErrors.quantite }}</span>
+
+    <label for="raison">Raison de la sortie <span class="required">*</span></label>
+    <select id="raison" [(ngModel)]="sortie.raison" name="raison" required [class.error]="formErrors.raison">
+      <option value="">-- Choisir une raison --</option>
+      <option *ngFor="let r of raisons" [value]="r.value">{{ r.label }}</option>
+    </select>
+    <span class="error-message" *ngIf="formErrors.raison">{{ formErrors.raison }}</span>
+
+    <label for="commentaire">Commentaire (optionnel)</label>
+    <textarea
+      id="commentaire"
+      [(ngModel)]="sortie.commentaire"
+      name="commentaire"
+      rows="3"
+      placeholder="Ajoutez des détails sur cette sortie..."></textarea>
+
+    <button
+      type="submit"
+      [disabled]="!sortie.stockId || !sortie.quantite || toNumber(sortie.quantite) > quantiteDisponible || !sortie.raison || quantiteDisponible <= 0 || hasFormErrors()">
+      <i class="fas fa-save"></i> Enregistrer la sortie
+    </button>
+  </form>
+</div>
+
+<!-- Modal de confirmation -->
+<div class="modal-overlay" *ngIf="showConfirmModal">
+  <div class="modal-box">
+    <h3><i class="fas fa-exclamation-triangle"></i> Confirmation de sortie</h3>
+    
+    <div class="confirm-details">
+      <p><strong>Produit:</strong> {{ getProduitNom(sortie.produitId!) }}</p>
+      <p><strong>Quantité à sortir:</strong> <span class="highlight">{{ sortie.quantite }} unité(s)</span></p>
+      <p><strong>Raison:</strong> {{ getRaisonLabel(sortie.raison) }}</p>
+      <p><strong>Stock actuel:</strong> {{ quantiteDisponible }} unités</p>
+      <p><strong>Nouveau stock:</strong> <span [class.critical-text]="isStockCritiqueAfter()">{{ getNouveauStock() }} unités</span></p>
+      
+      <div class="warning-box" *ngIf="isStockCritiqueAfter()">
+        <i class="fas fa-exclamation-triangle"></i>
+        <strong>ATTENTION:</strong> Le stock sera en dessous du seuil critique ({{ stockSelectionne.seuilCritique }} unités) !
+      </div>
+      
+      <p *ngIf="sortie.commentaire" class="comment-box">
+        <strong>Commentaire:</strong> {{ sortie.commentaire }}
+      </p>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" (click)="cancelConfirm()">
+        <i class="fas fa-times"></i> Annuler
+      </button>
+      <button class="btn btn-success" (click)="confirmSortie()">
+        <i class="fas fa-check"></i> Confirmer la sortie
+      </button>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,28 @@
+<div class="form-page">
+  <div class="header-actions">
+    <button class="btn btn-back" (click)="router.navigate(['/fournisseurs'])">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <h2>Ajouter un fournisseur</h2>
+  </div>
+
+<form #fournisseurForm="ngForm" (ngSubmit)="save(fournisseurForm)">
+
+  <label for="nom">Nom <span class="required">*</span></label>
+  <input id="nom" type="text" [(ngModel)]="fournisseur.nom" name="nom" required placeholder="Ex: ABC Company" [class.error]="formErrors.nom" maxlength="100">
+  <span class="error-message" *ngIf="formErrors.nom">{{ formErrors.nom }}</span>
+
+  <label for="email">Email <span class="required">*</span></label>
+  <input id="email" type="email" [(ngModel)]="fournisseur.email" name="email" required placeholder="Ex: contact@abc.com" [class.error]="formErrors.email" maxlength="100">
+  <span class="error-message" *ngIf="formErrors.email">{{ formErrors.email }}</span>
+
+  <label for="telephone">Téléphone</label>
+  <input id="telephone" type="text" [(ngModel)]="fournisseur.telephone" name="telephone" placeholder="Ex: 0123456789 (10 chiffres)" [class.error]="formErrors.telephone" maxlength="20" (blur)="validateForm()">
+  <span class="error-message" *ngIf="formErrors.telephone">{{ formErrors.telephone }}</span>
+
+  <label for="adresse">Adresse</label>
+  <input id="adresse" type="text" [(ngModel)]="fournisseur.adresse" name="adresse" placeholder="Ex: 123 Rue Example, 75001 Paris" maxlength="200">
+
+  <button type="submit" [disabled]="fournisseurForm.invalid"><i class="fas fa-save"></i> Enregistrer</button>
+</form>
+</div>

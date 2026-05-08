@@ -1,0 +1,103 @@
+<div class="details-card" *ngIf="produit">
+  <div class="header-actions">
+    <button class="btn btn-back" (click)="router.navigate(['/produits'])">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <h2>Détails du produit</h2>
+  </div>
+
+  <div class="details-layout">
+    <div class="details-main">
+  <form #produitDetailsForm="ngForm" class="form-grid">
+    <div class="form-row">
+      <label for="designation">Désignation <span class="required">*</span></label>
+      <input id="designation" type="text" [(ngModel)]="produit.designation" name="designation" [disabled]="!editMode" [class.error]="formErrors.designation" maxlength="200">
+      <span class="error-message" *ngIf="formErrors.designation">{{ formErrors.designation }}</span>
+    </div>
+
+    <div class="form-row">
+      <label for="description">Description</label>
+      <input id="description" type="text" [(ngModel)]="produit.description" name="description" [disabled]="!editMode" maxlength="500">
+    </div>
+
+    <div class="form-row">
+      <label for="prix">Prix <span class="required">*</span></label>
+      <input id="prix" type="number" [(ngModel)]="produit.prix" name="prix" [disabled]="!editMode" min="0" step="0.01" [class.error]="formErrors.prix">
+      <span class="error-message" *ngIf="formErrors.prix">{{ formErrors.prix }}</span>
+    </div>
+
+    <div class="form-row">
+      <label for="categorie">Catégorie</label>
+      <select id="categorie" [(ngModel)]="produit.categorie" name="categorie" [disabled]="!editMode">
+        <option value="">-- Choisir une catégorie --</option>
+        <option value="Aliments">Aliments</option>
+        <option value="Cosmétiques">Cosmétiques</option>
+        <option value="Ménage">Ménage</option>
+        <option value="Bébé">Bébé</option>
+        <option value="Accessoires">Accessoires</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label for="reference">Référence</label>
+      <input id="reference" type="text" [value]="produit.reference" name="reference" disabled>
+    </div>
+
+    <div class="form-row">
+      <label for="fournisseur">Fournisseur</label>
+      <input id="fournisseur" type="text" [value]="fournisseurNom" disabled>
+    </div>
+  </form>
+    </div>
+
+  <!-- Section Stock -->
+    <div class="details-sidebar">
+  <div class="stock-section" *ngIf="stock">
+    <h3>Informations du Stock</h3>
+    <div class="stock-info" [class.critical]="isStockCritique()">
+      <div class="stock-item">
+        <label>Quantité en stock:</label>
+        <span class="stock-value">{{ stock.quantite }}</span>
+      </div>
+      <div class="stock-item">
+        <label>Seuil critique:</label>
+        <span class="stock-value">{{ stock.seuilCritique }}</span>
+      </div>
+      <div class="stock-item" *ngIf="stock.emplacement">
+        <label>Emplacement:</label>
+        <span class="stock-value">{{ stock.emplacement }}</span>
+      </div>
+      <div class="stock-item">
+        <label>Statut:</label>
+        <span class="badge" [class.critical]="isStockCritique()" [class.ok]="!isStockCritique()">
+          {{ isStockCritique() ? 'Critique' : 'OK' }}
+        </span>
+      </div>
+      <div class="stock-actions">
+        <button class="btn btn-secondary" (click)="goToStockDetails()">Voir détails du stock</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-stock" *ngIf="!stock">
+    <p>Aucun stock enregistré pour ce produit.</p>
+    <button class="btn btn-secondary" (click)="goToCreateStock()">Créer un stock</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button *ngIf="!editMode" class="btn btn-primary" (click)="activerModification()">
+      <i class="fas fa-edit"></i> Modifier
+    </button>
+
+    <button *ngIf="editMode" class="btn btn-secondary" (click)="editMode = false; formErrors = {}">
+      <i class="fas fa-times"></i> Annuler
+    </button>
+
+    <button *ngIf="editMode" class="btn btn-success" (click)="enregistrer(produitDetailsForm)">
+      <i class="fas fa-save"></i> Enregistrer
+    </button>
+  </div>
+
+</div>

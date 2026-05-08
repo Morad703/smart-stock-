@@ -1,0 +1,59 @@
+<div class="toolbar">
+  <input
+    type="text"
+    placeholder="Rechercher un produit..."
+    [(ngModel)]="searchTerm"
+    (input)="filterProduits()"
+  />
+  <select
+    [(ngModel)]="selectedCategorie"
+    (change)="filterProduits()"
+    class="category-filter">
+    <option value="">Toutes les catégories</option>
+    <option value="Aliments">Aliments</option>
+    <option value="Cosmétiques">Cosmétiques</option>
+    <option value="Ménage">Ménage</option>
+    <option value="Bébé">Bébé</option>
+    <option value="Accessoires">Accessoires</option>
+  </select>
+  <button class="btn btn-success add-btn" (click)="goToAdd()"><i class="fas fa-plus"></i> Ajouter</button>
+  <button class="btn btn-info refresh-btn" (click)="refresh()"><i class="fas fa-sync-alt"></i> Rafraîchir</button>
+</div>
+
+<table>
+  <thead>
+  <tr>
+    <th>Référence</th>
+    <th>Désignation</th>
+    <th>Catégorie</th>
+    <th>Prix</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <tr *ngFor="let p of filteredProduits">
+    <td><strong>{{ p.reference }}</strong></td>
+    <td>{{ p.designation }}</td>
+    <td>{{ p.categorie }}</td>
+    <td>{{ p.prix }}</td>
+    <td class="actions">
+      <button class="btn btn-info detail-btn" (click)="showDetails(p.id)"><i class="fas fa-eye"></i> Détails</button>
+      <button class="btn btn-danger delete-btn" (click)="openDeleteModal(p)"><i class="fas fa-trash"></i> Supprimer</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<!-- 🌟 MODAL DE CONFIRMATION -->
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal-box">
+    <h3>Confirmation</h3>
+    <p>Voulez-vous vraiment supprimer <strong>{{ produitToDelete?.designation }}</strong> ?</p>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary cancel" (click)="cancelDelete()"><i class="fas fa-times"></i> Annuler</button>
+      <button class="btn btn-danger confirm" (click)="confirmDelete()"><i class="fas fa-trash"></i> Supprimer</button>
+    </div>
+  </div>
+</div>

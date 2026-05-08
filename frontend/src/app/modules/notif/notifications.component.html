@@ -1,0 +1,35 @@
+<div class="notif-container">
+  <div class="notif-header">
+    <h2>Notifications</h2>
+    <span class="notif-count" *ngIf="notifications.length > 0">{{ notifications.length }} notification(s)</span>
+  </div>
+
+  <div *ngIf="notifications.length === 0" class="empty">
+    <i class="fas fa-bell-slash"></i>
+    <p>Aucune notification pour le moment</p>
+    <small>Les alertes de stock critique apparaîtront ici</small>
+  </div>
+
+  <div class="notif-list">
+    <div class="notif-card" 
+         *ngFor="let n of notifications; let first = first" 
+         [class.new]="first"
+         [class.rapport]="isRapport(n.message)"
+         [class.alerte]="!isRapport(n.message)">
+      <div class="notif-icon" [class.rapport-icon]="isRapport(n.message)" [class.alerte-icon]="!isRapport(n.message)">
+        <i class="fas" [ngClass]="getNotificationIcon(n.message)"></i>
+      </div>
+      <div class="notif-content">
+        <div class="notif-header-card">
+          <span class="notif-type" [class.rapport-type]="isRapport(n.message)" [class.alerte-type]="!isRapport(n.message)">
+            {{ getNotificationType(n.message) }}
+          </span>
+          <span class="notif-date">{{ n.dateNotif | date : 'dd/MM/yyyy à HH:mm' }}</span>
+        </div>
+        <div class="notif-message" [class.rapport-message]="isRapport(n.message)">
+          <pre>{{ formatMessage(n.message) }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

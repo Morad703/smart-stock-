@@ -1,0 +1,49 @@
+<div class="toolbar">
+  <input type="text" placeholder="Rechercher un fournisseur..." [(ngModel)]="searchTerm" (input)="filterFournisseurs()" />
+  <button class="btn btn-success add-btn" (click)="goToAdd()"><i class="fas fa-plus"></i> Ajouter</button>
+  <button class="btn btn-info refresh-btn" (click)="refresh()"><i class="fas fa-sync-alt"></i> Rafraîchir</button>
+</div>
+
+<table>
+  <thead>
+  <tr>
+    <th>Nom</th>
+    <th>Email</th>
+    <th>Téléphone</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <tr *ngFor="let f of filteredFournisseurs">
+    <td>{{ f.nom }}</td>
+    <td>{{ f.email }}</td>
+    <td>{{ f.telephone }}</td>
+    <td class="actions">
+      <button class="btn btn-info detail-btn" (click)="showDetails(f.id)"><i class="fas fa-eye"></i> Détails</button>
+      <button class="btn btn-danger delete-btn" (click)="openDeleteModal(f)"><i class="fas fa-trash"></i> Supprimer</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<!-- 🌟 MODAL DE CONFIRMATION -->
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal-box">
+    <h3>Confirmation de suppression</h3>
+    <p>Voulez-vous vraiment supprimer <strong>{{ fournisseurToDelete?.nom }}</strong> ?</p>
+    <p class="warning-text">⚠️ <strong>Attention :</strong> Cette action supprimera également :</p>
+    <ul class="warning-list" style="margin: 10px 0; padding-left: 20px; color: #dc3545;">
+      <li>Tous les produits associés à ce fournisseur</li>
+      <li>Tous les stocks de ces produits</li>
+    </ul>
+    <p class="info-text" style="margin: 10px 0; color: #0d6efd; font-size: 13px;">
+      ℹ️ <strong>Note :</strong> Les commandes seront conservées pour l'historique, même si les produits sont supprimés.
+    </p>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary cancel" (click)="cancelDelete()"><i class="fas fa-times"></i> Annuler</button>
+      <button class="btn btn-danger confirm" (click)="confirmDelete()"><i class="fas fa-trash"></i> Supprimer</button>
+    </div>
+  </div>
+</div>

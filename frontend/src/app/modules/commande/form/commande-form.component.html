@@ -1,0 +1,100 @@
+<div class="form-page">
+  <div class="header-actions">
+    <button type="button" class="btn-back" (click)="router.navigate(['/commandes'])">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <h2>Nouvelle commande</h2>
+  </div>
+
+  <form #commandeForm="ngForm" (ngSubmit)="save(commandeForm)">
+
+    <!-- Fournisseur -->
+    <div class="form-group">
+      <label for="fournisseurId">Fournisseur <span class="required">*</span></label>
+
+      <select id="fournisseurId"
+              [ngModel]="commande.fournisseurId"
+              (ngModelChange)="commande.fournisseurId = $event; onFournisseurChange()"
+              name="fournisseurId"
+              required
+              [class.error]="formErrors.fournisseurId">
+
+        <option [value]="null">-- Choisir un fournisseur --</option>
+        <option *ngFor="let f of fournisseurs" [value]="f.id">
+          {{ f.nom }}
+        </option>
+      </select>
+
+      <span class="error-message" *ngIf="formErrors.fournisseurId">
+        {{ formErrors.fournisseurId }}
+      </span>
+    </div>
+
+    <!-- Produits disponibles -->
+    <div class="form-group" *ngIf="commande.fournisseurId && produitsDisponibles.length > 0">
+      <label>Produits disponibles <span class="required">*</span></label>
+
+      <div class="produits-list">
+        <div class="produit-item" *ngFor="let item of produitsSelectionnes; let i = index">
+
+          <div class="produit-select">
+            <select [(ngModel)]="item.produitId"
+                    [name]="'produit_' + i"
+                    [class.error]="formErrors.items">
+              <option [value]="0">-- Sélectionner un produit --</option>
+              <option *ngFor="let p of produitsDisponibles" [value]="p.id">
+                {{ p.designation }} ({{ p.reference || 'N/A' }}) - {{ p.prix | number:'1.2-2' }} DH
+              </option>
+            </select>
+          </div>
+
+          <div class="quantite-input">
+            <input type="number"
+                   [(ngModel)]="item.quantite"
+                   [name]="'quantite_' + i"
+                   min="1"
+                   placeholder="Qté"
+                   [class.error]="formErrors.items">
+          </div>
+
+          <button type="button"
+                  class="btn btn-danger btn-small"
+                  (click)="removeProduit(i)">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <button type="button"
+                class="btn btn-info btn-add"
+                (click)="addProduit()">
+          <i class="fas fa-plus"></i> Ajouter un produit
+        </button>
+      </div>
+
+      <span class="error-message" *ngIf="formErrors.items">{{ formErrors.items }}</span>
+
+      <small *ngIf="!formErrors.items && produitsSelectionnes.length > 0">
+        Sélectionnez au moins un produit avec une quantité valide
+      </small>
+    </div>
+
+    <!-- Aucun produit -->
+    <div class="info-box" *ngIf="commande.fournisseurId && produitsDisponibles.length === 0">
+      <i class="fas fa-info-circle"></i>
+      <p>Aucun produit disponible pour ce fournisseur.</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="router.navigate(['/commandes'])">
+        <i class="fas fa-times"></i> Annuler
+      </button>
+
+      <button type="submit" class="btn btn-success"
+              [disabled]="commandeForm.invalid || hasFormErrors()">
+        <i class="fas fa-save"></i> Enregistrer
+      </button>
+    </div>
+
+  </form>
+</div>

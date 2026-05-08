@@ -1,0 +1,4 @@
+<div class="toast" *ngIf="toastText" [class.success]="isRapportNotification" [class.alerte]="!isRapportNotification">
+  <i class="fas toast-icon" [class.fa-file-alt]="isRapportNotification" [class.fa-exclamation-triangle]="!isRapportNotification"></i>
+  <span class="toast-message">{{ toastText }}</span>
+</div>

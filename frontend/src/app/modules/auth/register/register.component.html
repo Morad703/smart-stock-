@@ -1,0 +1,102 @@
+<div class="register-container">
+  <div class="register-wrapper">
+    <!-- Section gauche avec illustration -->
+    <div class="register-illustration">
+      <div class="illustration-content">
+        <div class="illustration-icon">
+          <i class="fas fa-boxes"></i>
+        </div>
+        <h1>Smart Stock</h1>
+        <p class="illustration-text">Rejoignez notre plateforme de gestion de stock intelligente</p>
+        <div class="features-list">
+          <div class="feature-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Gestion complète des stocks</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Suivi en temps réel</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section droite avec formulaire -->
+    <div class="register-form-section">
+      <div class="register-card">
+        <div class="register-header">
+          <h2>Créer un compte</h2>
+          <p class="register-subtitle">Commencer votre aventure avec Smart Stock</p>
+        </div>
+
+        <form (ngSubmit)="register()" #registerForm="ngForm" class="register-form">
+          <div class="form-group">
+            <label for="username">
+              <i class="fas fa-user"></i>
+              Nom d'utilisateur <span class="required">*</span>
+            </label>
+            <input
+              id="username"
+              type="text"
+              [(ngModel)]="admin.username"
+              name="username"
+              required
+              placeholder="Choisissez un nom d'utilisateur"
+              [class.error]="formErrors.username"
+              [disabled]="isLoading">
+            <span class="error-message" *ngIf="formErrors.username">{{ formErrors.username }}</span>
+          </div>
+
+          <div class="form-group">
+            <label for="password">
+              <i class="fas fa-lock"></i>
+              Mot de passe <span class="required">*</span>
+            </label>
+            <input
+              id="password"
+              type="password"
+              [(ngModel)]="admin.password"
+              name="password"
+              required
+              placeholder="Minimum 6 caractères"
+              [class.error]="formErrors.password"
+              [disabled]="isLoading">
+            <span class="error-message" *ngIf="formErrors.password">{{ formErrors.password }}</span>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">
+              <i class="fas fa-lock"></i>
+              Confirmer le mot de passe <span class="required">*</span>
+            </label>
+            <input
+              id="confirmPassword"
+              type="password"
+              [(ngModel)]="confirmPassword"
+              name="confirmPassword"
+              required
+              placeholder="Répétez votre mot de passe"
+              [class.error]="formErrors.confirmPassword"
+              [disabled]="isLoading">
+            <span class="error-message" *ngIf="formErrors.confirmPassword">{{ formErrors.confirmPassword }}</span>
+          </div>
+
+          <button type="submit" [disabled]="isLoading || registerForm.invalid" class="register-btn">
+            <span *ngIf="!isLoading">
+              <i class="fas fa-user-plus"></i>
+              Créer mon compte
+            </span>
+            <span *ngIf="isLoading">
+              <i class="fas fa-spinner fa-spin"></i>
+              Création en cours...
+            </span>
+          </button>
+
+          <div class="register-footer">
+            <p>Vous avez déjà un compte ? <a routerLink="/login">Se connecter</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
